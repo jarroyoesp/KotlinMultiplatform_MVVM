@@ -1,0 +1,2 @@
+include ':AndroidApp', ':SharedCode'
+rootProject.name='KMP_MVVM'

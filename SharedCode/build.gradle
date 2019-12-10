@@ -1,0 +1,44 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion(28)
+
+    defaultConfig {
+        minSdkVersion(21)
+        targetSdkVersion(28)
+    }
+
+    // By default the android gradle plugin expects to find the kotlin source files in
+    // the folder `main` and the test in the folder `test`. This is to be able place
+    // the source code files inside androidMain and androidTest folders
+    sourceSets {
+        main {
+            manifest.srcFile 'src/androidMain/AndroidManifest.xml'
+            java.srcDirs = ['src/androidMain/kotlin']
+            res.srcDirs = ['src/androidMain/res']
+        }
+        test {
+            java.srcDirs = ['src/androidTest/kotlin']
+            res.srcDirs = ['src/androidTest/res']
+        }
+    }
+}
+
+kotlin {
+    targets {
+        fromPreset(presets.android, 'android')
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            api 'org.jetbrains.kotlin:kotlin-stdlib-common'
+        }
+
+        androidMain.dependencies {
+            implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+        }
+    }
+}
