@@ -1,2 +1,4 @@
 include ':AndroidApp', ':SharedCode'
 rootProject.name='KMP_MVVM'
+
+enableFeaturePreview('GRADLE_METADATA')
