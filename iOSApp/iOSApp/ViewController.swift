@@ -36,7 +36,11 @@ class ViewController: UIViewController {
     func observeCreateLogAbsenceViewModel() {
         mCounterViewModel.mGetCounterLiveData.addObserver { (mCurrentState) in
             if (mCurrentState is SuccessGetCounterState) {
-                self.mCounterLabel.text = "Success"
+                let successState = mCurrentState as! SuccessGetCounterState
+                let response = (successState.response as! Response.Success)
+                let value = response.data as! Int
+                self.mCounterLabel.text = String(value)
+                
             } else if (mCurrentState is LoadingGetCounterState) {
                 self.mCounterLabel.text = "Loading"
             } else if (mCurrentState is ErrorGetCounterState) {
