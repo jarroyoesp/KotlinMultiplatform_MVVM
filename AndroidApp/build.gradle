@@ -20,6 +20,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude("META-INF/*.kotlin_module")
+    }
 }
 
 dependencies {
@@ -34,4 +38,7 @@ dependencies {
 
     // SHARED CODE
     implementation project(':SharedCode')
+
+
+    implementation("dev.icerock.moko:mvvm:0.3.1")
 }
