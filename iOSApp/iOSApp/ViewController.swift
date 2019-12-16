@@ -54,7 +54,7 @@ class ViewController: UIViewController {
      * ON CLICKS
      */
     @objc func didButtonClick(_ sender: UIButton) {
-        mCounterViewModel.readState()
+        mCounterViewModel.getCounter()       
     }
     
     deinit {

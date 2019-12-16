@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         activity_main_tv.text = platformName
 
         activity_main_button.setOnClickListener {
-            mCounterViewModel.readState()
+            mCounterViewModel.getCounter()
         }
     }
 

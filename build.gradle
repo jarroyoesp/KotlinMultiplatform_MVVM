@@ -22,8 +22,54 @@ allprojects {
 
 
         maven { url = uri("https://dl.bintray.com/icerockdev/moko") }
-        
+        maven { url  "https://dl.bintray.com/florent37/maven" }
     }
+}
+
+ext {
+    retrofitVersion = "2.3.0"
+    coroutine_version = "1.2.1"
+    serializer_version = "0.13.0"
+    ktor_version = "1.2.5"
+    react_version = "16.9.0"
+
+    sqldelight_version = "1.2.0"
+
+    support_library_version = '28.1.1'
+    constraint_layout_version = '1.1.0'
+    espresso_version = '3.0.1'
+    retrofit_version = '2.4.0'
+    okhttp_version = '4.0.1'
+    kotlin_coroutines_version = '1.2.1'
+    mockito_version = '2.18.3'
+
+    anko_version = '0.10.4'
+    buildToolsVersion = "27.0.3"
+    playServicesLocationVersion = "16.0.0"
+    playServicesAuthVersion = "15.0.1"
+    playServicesVisionVersion = "15.0.2"
+
+    firebaseAuthVersion = "16.0.2"
+    firebaseCoreVersion = "16.0.1"
+    firebaseMessagingVersion = "17.1.0"
+    firebaseFireStoreVersion = "17.0.3"
+    firebaseDatabaseVersion = "16.0.1"
+
+    retrofitVersion = "2.3.0"
+    butterknifeVersion = "10.1.0"
+    daggerVersion = "2.22.1"
+    picassoVersion = "2.71828"
+    roomVersion = '2.0.0-beta01'
+    gsonVersion = "2.8.5"
+    leakCanaryVersion = "1.6.3"
+
+    GsonVersion = "2.8.4"
+    work_manager_version = '1.0.0'
+    androidPlotVersion = "1.5.6"
+
+    klock_version = "1.4.0"
+    kodeinVersion = "6.4.1"
+
 }
 
 task clean(type: Delete) {
