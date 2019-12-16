@@ -1,5 +1,5 @@
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
-
+apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.android.library'
 
 android {
@@ -70,12 +70,15 @@ kotlin {
             // MOKO - MVVM
             implementation "dev.icerock.moko:mvvm:0.3.1"
 
-            // KOTLIN LOGGING
-            //implementation "com.github.florent37:multiplatform-log:1.0.1"
+            // SERIALIZATION
+            implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializer_version"
 
             // KODE IN
             implementation "org.kodein.di:kodein-di-core:$kodeinVersion"
             implementation "org.kodein.di:kodein-di-erased:$kodeinVersion"
+
+            // KTOR
+            implementation "io.ktor:ktor-client-core:$ktor_version"
         }
 
         androidMain.dependencies {

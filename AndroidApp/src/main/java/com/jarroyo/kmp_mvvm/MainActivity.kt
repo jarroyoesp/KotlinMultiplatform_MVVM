@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.jarroyo.sharedcode.base.Response
+import com.jarroyo.sharedcode.domain.model.github.GitHubRepo
 import com.jarroyo.sharedcode.platformName
 import com.jarroyo.sharedcode.viewModel.*
+import com.jarroyo.sharedcode.viewModel.github.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     // View Model
     lateinit var mCounterViewModel: CounterViewModel
+    lateinit var mGitHubViewModel: GitHubViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,19 +30,22 @@ class MainActivity : AppCompatActivity() {
 
         activity_main_button.setOnClickListener {
             mCounterViewModel.getCounter()
+            mGitHubViewModel.getGitHubRepoList("jarroyoesp")
         }
     }
 
     private fun initViewModel() {
         mCounterViewModel = CounterViewModel()
-        observeCreateLogAbsenceViewModel()
+        mGitHubViewModel = GitHubViewModel()
+        observeViewModel()
     }
 
     /****************************************************************************
      * OBSERVER
      ***************************************************************************/
-    private fun observeCreateLogAbsenceViewModel() {
+    private fun observeViewModel() {
         mCounterViewModel.mGetCounterLiveData.addObserver { getCurrentCounterState(it)}
+        mGitHubViewModel.mGetGitHubRepoListLiveData.addObserver { getGitHubListState(it)}
     }
 
     fun getCurrentCounterState(state: GetCounterState) {
@@ -62,12 +68,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun getGitHubListState(state: GetGitHubRepoListState) {
+        when (state) {
+            is SuccessGetGitHubRepoListState -> {
+                hideLoading()
+                val response =  state.response as Response.Success
+                onSuccessGetGitHubList(response.data)
+            }
+
+            is LoadingGetGitHubRepoListState -> {
+                showLoading()
+            }
+
+            is ErrorGetGitHubRepoListState -> {
+                hideLoading()
+                val response =  state as Response.Error
+                showError(response.message)
+            }
+        }
+    }
+
     /**
      * ON SUCCESS
      */
     private fun onSuccess(value: Int) {
 
         activity_main_tv.text = "Counter = $value"
+    }
+
+    private fun onSuccessGetGitHubList(list: List<GitHubRepo>) {
+
+        activity_main_tv.text = "GitHubRepos = $list"
     }
 
     /**

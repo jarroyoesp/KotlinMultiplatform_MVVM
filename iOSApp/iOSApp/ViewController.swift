@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var mCounterLabel: UILabel!
     
     private var mCounterViewModel: CounterViewModel!
+    private var mGitHubViewModel: GitHubViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +28,9 @@ class ViewController: UIViewController {
     
     func initViewModel() {
         mCounterViewModel = CounterViewModel()
+        mGitHubViewModel = GitHubViewModel()
         observeCounterViewModel()
+        observeGitHubViewModel()
     }
     
     /****************************************************************************
@@ -50,11 +53,33 @@ class ViewController: UIViewController {
         }
     }
     
+    func observeGitHubViewModel() {
+        mGitHubViewModel.mGetGitHubRepoListLiveData.addObserver { (mCurrentState) in
+            if (mCurrentState is SuccessGetGitHubRepoListState) {
+                let successState = mCurrentState as! SuccessGetGitHubRepoListState
+                let response = (successState.response as! Response.Success)
+                let value = response.data as! [GitHubRepo]
+                self.onSuccessGetGitHubRepoList(list: value)
+                
+            } else if (mCurrentState is LoadingGetGitHubRepoListState) {
+                self.mCounterLabel.text = "Loading"
+            } else if (mCurrentState is ErrorGetGitHubRepoListState) {
+                self.mCounterLabel.text = "ERROR"
+            }
+            
+        }
+    }
+    
+    func onSuccessGetGitHubRepoList(list: [GitHubRepo]) {
+        self.mCounterLabel.text = list[0].name
+    }
+    
     /*
      * ON CLICKS
      */
     @objc func didButtonClick(_ sender: UIButton) {
-        mCounterViewModel.getCounter()       
+        mCounterViewModel.getCounter()
+        mGitHubViewModel.getGitHubRepoList(username: "jarroyoesp")
     }
     
     deinit {
