@@ -27,13 +27,13 @@ class ViewController: UIViewController {
     
     func initViewModel() {
         mCounterViewModel = CounterViewModel()
-        observeCreateLogAbsenceViewModel()
+        observeCounterViewModel()
     }
     
     /****************************************************************************
      * OBSERVER
      ***************************************************************************/
-    func observeCreateLogAbsenceViewModel() {
+    func observeCounterViewModel() {
         mCounterViewModel.mGetCounterLiveData.addObserver { (mCurrentState) in
             if (mCurrentState is SuccessGetCounterState) {
                 let successState = mCurrentState as! SuccessGetCounterState
