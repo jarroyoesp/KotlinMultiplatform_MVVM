@@ -5,6 +5,10 @@ buildscript {
     repositories {
         google()
         jcenter()
+
+
+        mavenCentral()
+        maven { url "https://dl.bintray.com/kodein-framework/Kodein-DI/org/kodein/di/" }
         
     }
     dependencies {
@@ -23,6 +27,7 @@ allprojects {
 
         maven { url = uri("https://dl.bintray.com/icerockdev/moko") }
         maven { url  "https://dl.bintray.com/florent37/maven" }
+        maven { url "https://dl.bintray.com/kodein-framework/Kodein-DI" }
     }
 }
 

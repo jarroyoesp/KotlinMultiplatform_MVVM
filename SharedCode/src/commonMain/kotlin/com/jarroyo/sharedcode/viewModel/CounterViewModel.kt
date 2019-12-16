@@ -4,54 +4,28 @@
 
 package com.jarroyo.sharedcode.viewModel
 
-import com.jarroyo.sharedcode.ApplicationDispatcher
 import com.jarroyo.sharedcode.base.Response
-import com.jarroyo.sharedcode.data.repository.CounterRepository
+import com.jarroyo.sharedcode.di.KodeinInjector
 import com.jarroyo.sharedcode.domain.usecase.counter.GetCounterRequest
 import com.jarroyo.sharedcode.domain.usecase.counter.GetCounterUseCase
 import com.jarroyo.sharedcode.utils.coroutines.launchSilent
-import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
-import dev.icerock.moko.mvvm.livedata.map
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
+import org.kodein.di.erased.instance
 import kotlin.coroutines.CoroutineContext
 
 class CounterViewModel(
 ) : ViewModel() {
-    private val _counter: MutableLiveData<Int> = MutableLiveData(0)
-    val counter: LiveData<String> = _counter.map { it.toString() }
-
-
     var mGetCounterLiveData = MutableLiveData<GetCounterState>(LoadingGetCounterState())
 
-    fun onCounterButtonPressed() {
-        val current = _counter.value
-        _counter.value = current + 1
-    }
-
-    fun readState() {
-        onCounterButtonPressed()
-        mGetCounterLiveData.postValue(LoadingGetCounterState())
-        onProcessResponse(Response.Success(_counter.value))
-    }
-
-    fun onProcessResponse(response: Response<Int>) {
-        if (response is Response.Success) {
-            mGetCounterLiveData.postValue(SuccessGetCounterState(response))
-        } else {
-            mGetCounterLiveData.postValue(ErrorGetCounterState(response))
-        }
-    }
-
-
+    private val mGetCounterUseCase by KodeinInjector.instance<GetCounterUseCase>()
+    private val coroutineContext by KodeinInjector.instance<CoroutineContext>()
     private var job: Job = Job()
-    private val coroutineContext: CoroutineContext = ApplicationDispatcher
     private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
     }
 
-    private var mGetCounterUseCase = GetCounterUseCase(CounterRepository())
 
     /**
      * GET COUNTER

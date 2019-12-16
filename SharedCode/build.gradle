@@ -72,6 +72,10 @@ kotlin {
 
             // KOTLIN LOGGING
             //implementation "com.github.florent37:multiplatform-log:1.0.1"
+
+            // KODE IN
+            implementation "org.kodein.di:kodein-di-core:$kodeinVersion"
+            implementation "org.kodein.di:kodein-di-erased:$kodeinVersion"
         }
 
         androidMain.dependencies {
