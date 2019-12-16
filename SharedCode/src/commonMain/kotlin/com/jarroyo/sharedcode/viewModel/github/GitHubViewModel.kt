@@ -29,7 +29,7 @@ class GitHubViewModel(
 
 
     /**
-     * GET COUNTER
+     * GET GITHUB REPO LIST
      */
     fun getGitHubRepoList(username: String) = launchSilent(coroutineContext, exceptionHandler, job) {
         mGetGitHubRepoListLiveData.postValue(LoadingGetGitHubRepoListState())

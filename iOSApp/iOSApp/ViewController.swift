@@ -9,12 +9,17 @@
 import UIKit
 import SharedCode
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    // View
     @IBOutlet weak var mButton: UIButton!
     @IBOutlet weak var mCounterLabel: UILabel!
+    @IBOutlet weak var mTableView: UITableView!
     
     private var mCounterViewModel: CounterViewModel!
     private var mGitHubViewModel: GitHubViewModel!
+    
+    // Table View Data
+    internal var mGitHubRepoList: [GitHubRepo] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +29,9 @@ class ViewController: UIViewController {
     
     func configView() {
         mButton.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
+        
+        mTableView.dataSource = self
+        mTableView.delegate = self
     }
     
     func initViewModel() {
@@ -34,7 +42,7 @@ class ViewController: UIViewController {
     }
     
     /****************************************************************************
-     * OBSERVER
+     * OBSERVER VIEW MODEL
      ***************************************************************************/
     func observeCounterViewModel() {
         mCounterViewModel.mGetCounterLiveData.addObserver { (mCurrentState) in
@@ -71,16 +79,42 @@ class ViewController: UIViewController {
     }
     
     func onSuccessGetGitHubRepoList(list: [GitHubRepo]) {
-        self.mCounterLabel.text = list[0].name
+        update(list: list)
     }
     
-    /*
+    /****************************************************************************
      * ON CLICKS
-     */
+     ****************************************************************************/
     @objc func didButtonClick(_ sender: UIButton) {
         mCounterViewModel.getCounter()
         mGitHubViewModel.getGitHubRepoList(username: "jarroyoesp")
     }
+    
+    /*****************************************************************************
+     TABLE VIEW
+     ****************************************************************************/
+    internal func update(list: [GitHubRepo]) {
+        mGitHubRepoList.removeAll()
+        mGitHubRepoList.append(contentsOf: list)
+        mTableView.reloadData()
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return mGitHubRepoList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "locationListCell", for: indexPath)
+        let entry = mGitHubRepoList[indexPath.row]
+        
+        cell.textLabel?.text = entry.name
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let entryNum = mGitHubRepoList[indexPath.row].name
+    }
+    
     
     deinit {
         mCounterViewModel.onCleared()
