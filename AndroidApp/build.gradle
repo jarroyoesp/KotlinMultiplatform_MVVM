@@ -41,4 +41,10 @@ dependencies {
 
 
     implementation("dev.icerock.moko:mvvm:0.3.1")
+
+    // MULTI DEX
+    implementation 'androidx.multidex:multidex:2.0.0'
+    androidTestImplementation('androidx.multidex:multidex-instrumentation:2.0.0') {
+        exclude group: 'com.android.support', module: 'multidex'
+    }
 }

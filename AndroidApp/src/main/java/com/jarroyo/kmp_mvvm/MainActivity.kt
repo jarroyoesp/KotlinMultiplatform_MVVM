@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
             is ErrorGetGitHubRepoListState -> {
                 hideLoading()
-                val response =  state as Response.Error
+                val response =  state.response as Response.Error
                 showError(response.message)
             }
         }

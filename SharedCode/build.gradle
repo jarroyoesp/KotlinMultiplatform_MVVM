@@ -110,6 +110,12 @@ kotlin {
             // KTOR
             implementation "io.ktor:ktor-client-ios:$ktor_version"
         }
+
+        commonTest.dependencies {
+            implementation kotlin('test-common')
+            implementation kotlin('test-annotations-common')
+            implementation "io.mockk:mockk:$mockk_version"
+        }
     }
 }
 
