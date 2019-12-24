@@ -12,19 +12,6 @@ class GitHubApi {
 
     private val httpClient = HttpClient()
 
-    /*suspend fun getGitHubRepoList(username: String, success: (CurrentWeather) -> Unit, failure: (Throwable?) -> Unit) {
-        try {
-            val url =
-                "https://api.openweathermap.org/data/2.5/weather?q=${location.cityName}&APPID=f11780da3330643cd659bb6dbb4e44a3&units=metric"
-            val json = httpClient.get<String>(url)
-
-            Json.nonstrict.parse(GitHubRepo.serializer(), json)
-                .also(success)
-        } catch (ex: Exception) {
-            failure(ex)
-        }
-    }*/
-
     suspend fun getGitHubRepoList(username: String): Response<List<GitHubRepo>> {
         try {
             val url =

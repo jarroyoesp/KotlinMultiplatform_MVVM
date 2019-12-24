@@ -4,6 +4,8 @@ import com.jarroyo.kotlinmultiplatform.source.network.GitHubApi
 import com.jarroyo.sharedcode.ApplicationDispatcher
 import com.jarroyo.sharedcode.data.repository.CounterRepository
 import com.jarroyo.sharedcode.data.repository.GitHubRepository
+import com.jarroyo.sharedcode.data.source.network.INetworkDataSource
+import com.jarroyo.sharedcode.data.source.network.NetworkDataSource
 import com.jarroyo.sharedcode.domain.usecase.counter.GetCounterUseCase
 import com.jarroyo.sharedcode.domain.usecase.github.getRepos.GetGitHubRepoListUseCase
 import org.kodein.di.Kodein
@@ -30,6 +32,11 @@ val KodeinInjector = Kodein {
      */
     bind<CounterRepository>() with provider { CounterRepository() }
     bind<GitHubRepository>() with provider { GitHubRepository(instance()) }
+
+    /**
+     * NETWORK DATA SOURCE
+     */
+    bind<INetworkDataSource>() with provider { NetworkDataSource(instance()) }
 
     /**
      * NETWORK API
