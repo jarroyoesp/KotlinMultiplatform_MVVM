@@ -8,3 +8,6 @@ Example of application using Kotlin Multiplatform and MVVM pattern for both plat
 - [Serialization](https://github.com/Kotlin/kotlinx.serialization): to De/Serializing JSON 
 - [Kodein-DI](https://github.com/Kodein-Framework/Kodein-DI): Dependency injector
 - [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines): Library support for Kotlin coroutines with multiplatform support
+
+
+<img src="https://github.com/jarroyoesp/KotlinMultiplatform_MVVM/blob/master/images/KMP_MVVM_Schema.png">
