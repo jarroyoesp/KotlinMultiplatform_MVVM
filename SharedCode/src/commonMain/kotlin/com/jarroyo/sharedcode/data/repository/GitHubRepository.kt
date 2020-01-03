@@ -11,7 +11,7 @@ class GitHubRepository(
 ) {
 
     /***********************************************************************************************
-     * GET COUNTER
+     * GET REPOS
      **********************************************************************************************/
     suspend fun getRepos(request: GetGitHubRepoListRequest): Response<List<GitHubRepo>> {
         val response = networkDataSource.getGitHubRepoList(request.userName)

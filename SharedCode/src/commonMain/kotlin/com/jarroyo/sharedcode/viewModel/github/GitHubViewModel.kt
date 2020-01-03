@@ -17,15 +17,18 @@ import kotlinx.coroutines.Job
 import org.kodein.di.erased.instance
 import kotlin.coroutines.CoroutineContext
 
-class GitHubViewModel(
-) : ViewModel() {
+class GitHubViewModel : ViewModel() {
+
+    // LIVE DATA
     var mGetGitHubRepoListLiveData = MutableLiveData<GetGitHubRepoListState>(LoadingGetGitHubRepoListState())
 
+    // USE CASE
     private val mGetGitHubRepoListUseCase by KodeinInjector.instance<GetGitHubRepoListUseCase>()
+
+    // ASYNC - COROUTINES
     private val coroutineContext by KodeinInjector.instance<CoroutineContext>()
     private var job: Job = Job()
-    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
-    }
+    private val exceptionHandler = CoroutineExceptionHandler { _, _ -> }
 
 
     /**
@@ -36,10 +39,13 @@ class GitHubViewModel(
 
         val request = GetGitHubRepoListRequest(username)
         val response = mGetGitHubRepoListUseCase.execute(request)
-        processSaveUserResponse(response)
+        processGitHubRepoListResponse(response)
     }
 
-    fun processSaveUserResponse(response: Response<List<GitHubRepo>>){
+    /**
+     * PROCCESS RESPONSE
+     */
+    fun processGitHubRepoListResponse(response: Response<List<GitHubRepo>>){
         if (response is Response.Success) {
             mGetGitHubRepoListLiveData.postValue(
                 SuccessGetGitHubRepoListState(
@@ -54,5 +60,4 @@ class GitHubViewModel(
             )
         }
     }
-
 }
