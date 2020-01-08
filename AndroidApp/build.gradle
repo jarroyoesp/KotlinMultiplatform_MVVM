@@ -39,6 +39,9 @@ dependencies {
     // SHARED CODE
     implementation project(':SharedCode')
 
+    // ARCHITECTURE COMPONENTS
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation "android.arch.lifecycle:viewmodel:1.1.1"
 
     implementation("dev.icerock.moko:mvvm:0.3.1")
 

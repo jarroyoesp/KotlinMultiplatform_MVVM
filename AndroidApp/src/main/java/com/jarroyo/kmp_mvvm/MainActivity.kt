@@ -3,6 +3,7 @@ package com.jarroyo.kmp_mvvm
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import com.jarroyo.sharedcode.base.Response
 import com.jarroyo.sharedcode.domain.model.github.GitHubRepo
 import com.jarroyo.sharedcode.platformName
@@ -35,8 +36,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        mCounterViewModel = CounterViewModel()
-        mGitHubViewModel = GitHubViewModel()
+        mCounterViewModel = ViewModelProviders.of(this).get(CounterViewModel::class.java)
+        mGitHubViewModel = ViewModelProviders.of(this).get(GitHubViewModel::class.java)
         observeViewModel()
     }
 
