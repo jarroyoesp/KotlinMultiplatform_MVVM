@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.jarroyo.kmp_mvvm.ui.main.adapter.GitHubRepoRVAdapter
 import com.jarroyo.sharedcode.base.Response
 import com.jarroyo.sharedcode.domain.model.github.GitHubRepo
 import com.jarroyo.sharedcode.platformName
@@ -17,6 +19,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var mCounterViewModel: CounterViewModel
     lateinit var mGitHubViewModel: GitHubViewModel
 
+    // RV Adapter
+    private var mLayoutManager: LinearLayoutManager? = null
+    private var mRvAdapter: GitHubRepoRVAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         val platformName = platformName()
         activity_main_tv.text = platformName
 
+
         activity_main_button.setOnClickListener {
             mCounterViewModel.getCounter()
             mGitHubViewModel.getGitHubRepoList("jarroyoesp")
@@ -39,6 +46,24 @@ class MainActivity : AppCompatActivity() {
         mCounterViewModel = ViewModelProviders.of(this).get(CounterViewModel::class.java)
         mGitHubViewModel = ViewModelProviders.of(this).get(GitHubViewModel::class.java)
         observeViewModel()
+    }
+
+    private fun configRecyclerView(treatmentList: List<GitHubRepo>) {
+        if (activity_main_rv.adapter == null) {
+            mLayoutManager = LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL, false
+            )
+            activity_main_rv.layoutManager = mLayoutManager
+
+            mRvAdapter = GitHubRepoRVAdapter(treatmentList)
+
+            activity_main_rv.adapter = mRvAdapter
+
+        } else {
+            mRvAdapter?.setList(treatmentList)
+            mRvAdapter?.notifyDataSetChanged()
+        }
     }
 
     /****************************************************************************
@@ -98,8 +123,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onSuccessGetGitHubList(list: List<GitHubRepo>) {
-
-        activity_main_tv.text = "GitHubRepos = $list"
+        configRecyclerView(list)
     }
 
     /**
