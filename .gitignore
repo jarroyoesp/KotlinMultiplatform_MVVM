@@ -44,3 +44,6 @@ Pods/
 
 #Node Modules
 node_modules
+
+# Firebase
+AndroidApp/google-services.json
