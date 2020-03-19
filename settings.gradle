@@ -1,4 +1,7 @@
-include ':AndroidApp', ':SharedCode'
+include ':AndroidApp'
+include ':SharedCode'
+include ':Common'
+include ':BackEnd'
 rootProject.name='KMP_MVVM'
 
 enableFeaturePreview('GRADLE_METADATA')

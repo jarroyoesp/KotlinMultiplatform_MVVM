@@ -1,0 +1,8 @@
+apply plugin: 'kotlin-platform-common'
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-common'
+}
