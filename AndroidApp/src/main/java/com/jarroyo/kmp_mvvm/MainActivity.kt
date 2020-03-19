@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jarroyo.kmp_mvvm.ui.main.adapter.GitHubRepoRVAdapter
 import com.jarroyo.sharedcode.base.Response
+import com.jarroyo.sharedcode.domain.model.firebase.FirebaseUser
 import com.jarroyo.sharedcode.domain.model.github.GitHubRepo
 import com.jarroyo.sharedcode.platformName
 import com.jarroyo.sharedcode.viewModel.*
+import com.jarroyo.sharedcode.viewModel.firebase.*
 import com.jarroyo.sharedcode.viewModel.github.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -18,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     // View Model
     lateinit var mCounterViewModel: CounterViewModel
     lateinit var mGitHubViewModel: GitHubViewModel
+    lateinit var mFirebaseViewModel: FirebaseViewModel
 
     // RV Adapter
     private var mLayoutManager: LinearLayoutManager? = null
@@ -39,12 +42,14 @@ class MainActivity : AppCompatActivity() {
         activity_main_button.setOnClickListener {
             mCounterViewModel.getCounter()
             mGitHubViewModel.getGitHubRepoList("jarroyoesp")
+            mFirebaseViewModel.getFirebaseUserListFlow("jarroyoesp")
         }
     }
 
     private fun initViewModel() {
         mCounterViewModel = ViewModelProviders.of(this).get(CounterViewModel::class.java)
         mGitHubViewModel = ViewModelProviders.of(this).get(GitHubViewModel::class.java)
+        mFirebaseViewModel = ViewModelProviders.of(this).get(FirebaseViewModel::class.java)
         observeViewModel()
     }
 
@@ -72,6 +77,7 @@ class MainActivity : AppCompatActivity() {
     private fun observeViewModel() {
         mCounterViewModel.mGetCounterLiveData.addObserver { getCurrentCounterState(it)}
         mGitHubViewModel.mGetGitHubRepoListLiveData.addObserver { getGitHubListState(it)}
+        mFirebaseViewModel.mGetFirebaseUserListLiveData.addObserver { getFirebaseUserListState(it)}
     }
 
     fun getCurrentCounterState(state: GetCounterState) {
@@ -114,12 +120,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun getFirebaseUserListState(state: GetFirebaseUserListState) {
+        when (state) {
+            is SuccessGetFirebaseUserListState -> {
+                hideLoading()
+                val response =  state.response as Response.Success
+                onSuccessFirebaseUserList(response.data)
+            }
+
+            is LoadingGetFirebaseUserListState -> {
+                showLoading()
+            }
+
+            is ErrorGetFirebaseUserListState -> {
+                hideLoading()
+                val response =  state.response as Response.Error
+                showError(response.message)
+            }
+        }
+    }
+
+
     /**
      * ON SUCCESS
      */
     private fun onSuccess(value: Int) {
 
         activity_main_tv.text = "Counter = $value"
+    }
+
+    private fun onSuccessFirebaseUserList(list: List<FirebaseUser>) {
+        Toast.makeText(this, list.toString(), Toast.LENGTH_LONG).show()
     }
 
     private fun onSuccessGetGitHubList(list: List<GitHubRepo>) {

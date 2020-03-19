@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.google.gms.google-services'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -53,4 +55,7 @@ dependencies {
 
     // RECYCLER VIEW
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    // FIREBASE
+    //implementation 'com.google.firebase:firebase-analytics:17.2.2'
 }

@@ -79,6 +79,9 @@ kotlin {
 
             // KTOR
             implementation "io.ktor:ktor-client-core:$ktor_version"
+
+            // FIRE STORE
+            implementation 'co.touchlab:firestore:0.2.5'
         }
 
         androidMain.dependencies {
@@ -96,6 +99,10 @@ kotlin {
 
             // KTOR
             implementation "io.ktor:ktor-client-android:$ktor_version"
+
+            // FIREBASE
+            implementation 'com.google.firebase:firebase-core:16.0.7'
+            implementation "com.google.firebase:firebase-firestore:$firebaseFireStoreVersion"
         }
 
         iosMain.dependencies {
