@@ -3,7 +3,6 @@ package com.jarroyo.sharedcode.data.repository
 import co.touchlab.firebase.firestore.*
 import com.jarroyo.sharedcode.base.Response
 import com.jarroyo.sharedcode.domain.model.firebase.FirebaseUser
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 
 class FirebaseRepository {
@@ -12,23 +11,17 @@ class FirebaseRepository {
      * GET USERS FROM FIREBASE
      **********************************************************************************************/
     suspend fun getFirebaseUser(): Response<List<FirebaseUser>> {
-        var list = mutableListOf<FirebaseUser>()
-        getFromFirebase(proc = {
-                list.addAll(it)
-            })
-        delay(3000)
+        var list = getFromFirebase()
         return Response.Success(list)
     }
 
-    fun getFromFirebase(proc: (list: List<FirebaseUser>) -> Unit) {
-        getFirebaseInstance()
+    suspend fun getFromFirebase(): List<FirebaseUser> {
+        val reponse = getFirebaseInstance()
             .collection("Users")
-            .get_()
-            .addListeners({
-                proc(parseFirebaseUserList(it.documents_))
-            },{
-                error(it)
-            })
+            .suspendGet()
+
+        val list = parseFirebaseUserList(reponse.documents_)
+        return list
     }
 
 
