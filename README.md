@@ -3,7 +3,7 @@
 
 Example of application using Kotlin Multiplatform and MVVM pattern for both platforms (Android & iOS). To achieve it the libraries used are:
 
-- [moko-mmvm](https://github.com/icerockdev/moko-mvvm): This is a Kotlin Multiplatform library that provides architecture components of Model-View-ViewModel for UI applications. Components are lifecycle-aware on Android.
+- [moko-mvvm](https://github.com/icerockdev/moko-mvvm): This is a Kotlin Multiplatform library that provides architecture components of Model-View-ViewModel for UI applications. Components are lifecycle-aware on Android.
 - [KTOR](https://github.com/ktorio/ktor): to make HTTP requests
 - [Serialization](https://github.com/Kotlin/kotlinx.serialization): to De/Serializing JSON 
 - [Kodein-DI](https://github.com/Kodein-Framework/Kodein-DI): Dependency injector
