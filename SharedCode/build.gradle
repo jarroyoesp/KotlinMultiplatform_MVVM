@@ -54,7 +54,7 @@ kotlin {
             }
             //compilations.main.outputKinds('FRAMEWORK')
             compilations.each {
-                it.extraOpts("-linkerOpts", "-lsqlite3")
+                //it.extraOpts("-linkerOpts", "-lsqlite3")
             }
         }
 

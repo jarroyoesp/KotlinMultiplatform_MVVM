@@ -7,8 +7,8 @@ import com.jarroyo.sharedcode.domain.model.github.GitHubRepo
 import com.jarroyo.sharedcode.utils.networkSystem.isNetworkAvailable
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import kotlinx.serialization.builtins.list
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.list
 
 class GitHubApi {
 
