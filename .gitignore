@@ -47,3 +47,4 @@ node_modules
 
 # Firebase
 AndroidApp/google-services.json
+iOSApp/iOSApp/GoogleService-Info.plist

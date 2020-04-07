@@ -17,6 +17,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     private var mCounterViewModel: CounterViewModel!
     private var mGitHubViewModel: GitHubViewModel!
+    private var mFirebaseViewModel: FirebaseViewModel!
     
     // Table View Data
     internal var mGitHubRepoList: [GitHubRepo] = []
@@ -37,8 +38,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func initViewModel() {
         mCounterViewModel = CounterViewModel()
         mGitHubViewModel = GitHubViewModel()
+        mFirebaseViewModel = FirebaseViewModel()
         observeCounterViewModel()
         observeGitHubViewModel()
+        observeFirebaseViewModel()
     }
     
     /****************************************************************************
@@ -78,6 +81,24 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
+    
+    func observeFirebaseViewModel() {
+        mFirebaseViewModel.mGetFirebaseUserListLiveData.addObserver { (mCurrentState) in
+            if (mCurrentState is SuccessGetFirebaseUserListState) {
+                let successState = mCurrentState as! SuccessGetFirebaseUserListState
+                let response = (successState.response as! Response.Success)
+                let firebaseUser = response.data as! [FirebaseUser]
+                self.mCounterLabel.text = firebaseUser[0].name
+                
+            } else if (mCurrentState is LoadingGetFirebaseUserListState) {
+                self.mCounterLabel.text = "Loading"
+            } else if (mCurrentState is ErrorGetFirebaseUserListState) {
+                self.mCounterLabel.text = "ERROR"
+            }
+            
+        }
+    }
+    
     func onSuccessGetGitHubRepoList(list: [GitHubRepo]) {
         update(list: list)
     }
@@ -88,6 +109,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     @objc func didButtonClick(_ sender: UIButton) {
         mCounterViewModel.getCounter()
         mGitHubViewModel.getGitHubRepoList(username: "jarroyoesp")
+        mFirebaseViewModel.getFirebaseUserListFlow(username: "jarroyoesp")
     }
     
     /*****************************************************************************

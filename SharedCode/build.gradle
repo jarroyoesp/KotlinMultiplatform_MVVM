@@ -1,6 +1,7 @@
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.native.cocoapods'
 
 android {
     compileSdkVersion(28)
@@ -44,14 +45,14 @@ kotlin {
 
         def iosPreset = presets.iosX64
         fromPreset(iosPreset, 'ios') {
-            binaries {
-                framework {
-                    // Disable bitcode embedding for the simulator build.
-                    if (iosPreset == presets.iosX64) {
-                        embedBitcode("disable")
-                    }
-                }
-            }
+            //binaries {
+            //    framework {
+            //         Disable bitcode embedding for the simulator build.
+            //        if (iosPreset == presets.iosX64) {
+            //            embedBitcode("disable")
+            //        }
+            //    }
+            //}
             //compilations.main.outputKinds('FRAMEWORK')
             compilations.each {
                 it.extraOpts("-linkerOpts", "-lsqlite3")
