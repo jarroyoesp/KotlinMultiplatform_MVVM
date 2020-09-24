@@ -11,8 +11,11 @@ import com.jarroyo.sharedcode.domain.usecase.counter.GetCounterUseCase
 import com.jarroyo.sharedcode.utils.coroutines.launchSilent
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
-import kotlinx.coroutines.*
-import org.kodein.di.erased.instance
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import org.kodein.di.instance
 import kotlin.coroutines.CoroutineContext
 
 class CounterViewModel: ViewModel() {

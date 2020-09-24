@@ -48,7 +48,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         mCounterViewModel.mGetCounterLiveData.addObserver { (mCurrentState) in
             if (mCurrentState is SuccessGetCounterState) {
                 let successState = mCurrentState as! SuccessGetCounterState
-                let response = (successState.response as! Response.Success)
+                let response = (successState.response as! ResponseSuccess)
                 let value = response.data as! Int
                 self.mCounterLabel.text = String(value)
                 
@@ -65,7 +65,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         mGitHubViewModel.mGetGitHubRepoListLiveData.addObserver { (mCurrentState) in
             if (mCurrentState is SuccessGetGitHubRepoListState) {
                 let successState = mCurrentState as! SuccessGetGitHubRepoListState
-                let response = (successState.response as! Response.Success)
+                let response = (successState.response as! ResponseSuccess)
                 let value = response.data as! [GitHubRepo]
                 self.onSuccessGetGitHubRepoList(list: value)
                 
@@ -118,6 +118,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     deinit {
         mCounterViewModel.onCleared()
+        mGitHubViewModel.onCleared()
     }
     
 }

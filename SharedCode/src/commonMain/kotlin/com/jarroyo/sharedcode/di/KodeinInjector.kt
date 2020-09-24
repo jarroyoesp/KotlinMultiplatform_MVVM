@@ -8,24 +8,41 @@ import com.jarroyo.sharedcode.data.source.network.INetworkDataSource
 import com.jarroyo.sharedcode.data.source.network.NetworkDataSource
 import com.jarroyo.sharedcode.domain.usecase.counter.GetCounterUseCase
 import com.jarroyo.sharedcode.domain.usecase.github.getRepos.GetGitHubRepoListUseCase
-import org.kodein.di.Kodein
-import org.kodein.di.erased.bind
-import org.kodein.di.erased.instance
-import org.kodein.di.erased.provider
-import org.kodein.di.erased.singleton
+import com.jarroyo.sharedcode.httpClientEngine
+import io.ktor.client.HttpClient
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import kotlinx.serialization.json.Json
+import org.kodein.di.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.native.concurrent.ThreadLocal
 
 @ThreadLocal
-val KodeinInjector = Kodein {
+val KodeinInjector = DI {
 
     bind<CoroutineContext>() with provider { ApplicationDispatcher }
 
+    val client = HttpClient(httpClientEngine) {
+        install(JsonFeature) {
+            serializer = KotlinxSerializer(json = Json {
+                isLenient = false
+                ignoreUnknownKeys = true
+                allowSpecialFloatingPointValues = true
+                useArrayPolymorphism = false
+            })
+        }
+    }
+
     /**
-     * USECASES
+     * NETWORK API
      */
-    bind<GetCounterUseCase>() with singleton { GetCounterUseCase(instance()) }
-    bind<GetGitHubRepoListUseCase>() with singleton { GetGitHubRepoListUseCase(instance()) }
+    bind<GitHubApi>() with provider { GitHubApi(client) }
+
+    /**
+     * NETWORK DATA SOURCE
+     */
+    bind<INetworkDataSource>() with provider { NetworkDataSource(instance()) }
+
 
     /**
      * REPOSITORIES
@@ -33,13 +50,10 @@ val KodeinInjector = Kodein {
     bind<CounterRepository>() with provider { CounterRepository() }
     bind<GitHubRepository>() with provider { GitHubRepository(instance()) }
 
-    /**
-     * NETWORK DATA SOURCE
-     */
-    bind<INetworkDataSource>() with provider { NetworkDataSource(instance()) }
 
     /**
-     * NETWORK API
+     * USECASES
      */
-    bind<GitHubApi>() with provider { GitHubApi() }
+    bind<GetCounterUseCase>() with singleton { GetCounterUseCase(instance()) }
+    bind<GetGitHubRepoListUseCase>() with singleton { GetGitHubRepoListUseCase(instance()) }
 }
