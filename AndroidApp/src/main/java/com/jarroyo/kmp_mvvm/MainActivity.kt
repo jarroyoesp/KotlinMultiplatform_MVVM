@@ -23,12 +23,21 @@ class MainActivity : AppCompatActivity() {
     private var mLayoutManager: LinearLayoutManager? = null
     private var mRvAdapter: GitHubRepoRVAdapter? = null
 
+    private lateinit var countObserver : (counterState: GetCounterState) -> Unit
+    private lateinit var getGithubListObserver : (state: GetGitHubRepoListState) -> Unit
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         configView()
         initViewModel()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mCounterViewModel.mGetCounterLiveData.removeObserver(countObserver)
+        mGitHubViewModel.mGetGitHubRepoListLiveData.removeObserver(getGithubListObserver)
     }
 
     private fun configView() {
@@ -70,8 +79,11 @@ class MainActivity : AppCompatActivity() {
      * OBSERVER
      ***************************************************************************/
     private fun observeViewModel() {
-        mCounterViewModel.mGetCounterLiveData.addObserver { getCurrentCounterState(it)}
-        mGitHubViewModel.mGetGitHubRepoListLiveData.addObserver { getGitHubListState(it)}
+        countObserver = { getCurrentCounterState(mCounterViewModel.mGetCounterLiveData.value) }
+        getGithubListObserver = { getGitHubListState(mGitHubViewModel.mGetGitHubRepoListLiveData.value) }
+
+        mCounterViewModel.mGetCounterLiveData.addObserver(countObserver)
+        mGitHubViewModel.mGetGitHubRepoListLiveData.addObserver(getGithubListObserver)
     }
 
     fun getCurrentCounterState(state: GetCounterState) {

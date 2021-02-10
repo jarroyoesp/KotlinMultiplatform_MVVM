@@ -14,6 +14,8 @@ import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import org.kodein.di.erased.instance
 import kotlin.coroutines.CoroutineContext
 
@@ -25,21 +27,17 @@ class GitHubViewModel : ViewModel() {
     // USE CASE
     private val mGetGitHubRepoListUseCase by KodeinInjector.instance<GetGitHubRepoListUseCase>()
 
-    // ASYNC - COROUTINES
-    private val coroutineContext by KodeinInjector.instance<CoroutineContext>()
-    private var job: Job = Job()
-    private val exceptionHandler = CoroutineExceptionHandler { _, _ -> }
-
-
     /**
      * GET GITHUB REPO LIST
      */
-    fun getGitHubRepoList(username: String) = launchSilent(coroutineContext, exceptionHandler, job) {
-        mGetGitHubRepoListLiveData.postValue(LoadingGetGitHubRepoListState())
+    fun getGitHubRepoList(username: String) {
+        viewModelScope.launch {
+            mGetGitHubRepoListLiveData.postValue(LoadingGetGitHubRepoListState())
 
-        val request = GetGitHubRepoListRequest(username)
-        val response = mGetGitHubRepoListUseCase.execute(request)
-        processGitHubRepoListResponse(response)
+            val request = GetGitHubRepoListRequest(username)
+            val response = mGetGitHubRepoListUseCase.execute(request)
+            processGitHubRepoListResponse(response)
+        }
     }
 
     /**
@@ -59,5 +57,10 @@ class GitHubViewModel : ViewModel() {
                 )
             )
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
     }
 }

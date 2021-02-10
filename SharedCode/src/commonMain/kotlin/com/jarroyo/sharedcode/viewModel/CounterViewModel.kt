@@ -11,32 +11,27 @@ import com.jarroyo.sharedcode.domain.usecase.counter.GetCounterUseCase
 import com.jarroyo.sharedcode.utils.coroutines.launchSilent
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import org.kodein.di.erased.instance
 import kotlin.coroutines.CoroutineContext
 
-class CounterViewModel(
-) : ViewModel() {
+class CounterViewModel: ViewModel() {
     var mGetCounterLiveData = MutableLiveData<GetCounterState>(LoadingGetCounterState())
 
     private val mGetCounterUseCase by KodeinInjector.instance<GetCounterUseCase>()
-    private val coroutineContext by KodeinInjector.instance<CoroutineContext>()
-    private var job: Job = Job()
-    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
-    }
 
 
     /**
      * GET COUNTER
      */
-    fun getCounter() = launchSilent(coroutineContext, exceptionHandler, job) {
-        mGetCounterLiveData.postValue(LoadingGetCounterState())
-
-        //Logger.d("COUNTER VIEWMODEL", "my message")
-        val request = GetCounterRequest()
-        val response = mGetCounterUseCase.execute(request)
-        processSaveUserResponse(response)
+    fun getCounter() {
+        viewModelScope.launch {
+            mGetCounterLiveData.postValue(LoadingGetCounterState())
+            //Logger.d("COUNTER VIEWMODEL", "my message")
+            val request = GetCounterRequest()
+            val response = mGetCounterUseCase.execute(request)
+            processSaveUserResponse(response)
+        }
     }
 
     fun processSaveUserResponse(response: Response<Int>){
@@ -53,6 +48,11 @@ class CounterViewModel(
                 )
             )
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
     }
 
 }
