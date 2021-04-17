@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         activity_main_button.setOnClickListener {
             mCounterViewModel.getCounter()
-            mGitHubViewModel.getGitHubRepoList("jarroyoesp")
+            mGitHubViewModel.getGitHubRepoListMokko("jarroyoesp")
         }
     }
 

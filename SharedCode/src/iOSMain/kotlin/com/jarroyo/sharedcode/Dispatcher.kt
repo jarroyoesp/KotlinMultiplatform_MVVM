@@ -4,7 +4,7 @@ import kotlinx.coroutines.*
 import platform.darwin.*
 import kotlin.coroutines.CoroutineContext
 
-internal actual val ApplicationDispatcher: CoroutineContext =
+internal actual val ApplicationDispatcher: CoroutineContext  = //Dispatchers.Main
     NsQueueDispatcher(dispatch_get_main_queue())
 
 internal class NsQueueDispatcher(

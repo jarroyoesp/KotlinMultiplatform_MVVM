@@ -65,34 +65,27 @@ kotlin {
             api 'org.jetbrains.kotlin:kotlin-stdlib-common'
 
             // COROUTINES
-            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutine_version"
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
 
             // MOKO - MVVM
             implementation "dev.icerock.moko:mvvm:$moko_mvvm_version"
 
-            // SERIALIZATION
-            implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializer_version"
-
             // KODE IN
-            implementation "org.kodein.di:kodein-di-core:$kodeinVersion"
-            implementation "org.kodein.di:kodein-di-erased:$kodeinVersion"
+            implementation "org.kodein.di:kodein-di:$kodeinVersion"
 
             // KTOR
             implementation "io.ktor:ktor-client-core:$ktor_version"
+            implementation("io.ktor:ktor-client-json:$ktor_version")
+            implementation("io.ktor:ktor-client-logging:$ktor_version")
+            implementation("io.ktor:ktor-client-serialization:$ktor_version")
         }
 
         androidMain.dependencies {
             implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
             implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
 
-            // COROUTINES
-            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
-
             // MOKO - MVVM
             implementation "androidx.lifecycle:lifecycle-extensions:$androidx_lifecycle_version"
-
-            // SERIALIZATION
-            implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializer_version"
 
             // KTOR
             implementation "io.ktor:ktor-client-android:$ktor_version"
@@ -100,12 +93,6 @@ kotlin {
 
         iosMain.dependencies {
             implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-
-            // COROUTINE
-            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutine_version"
-
-            // SERIALIZATION
-            implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializer_version"
 
             // KTOR
             implementation "io.ktor:ktor-client-ios:$ktor_version"
