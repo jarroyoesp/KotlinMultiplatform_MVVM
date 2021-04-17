@@ -2,6 +2,8 @@
 
 buildscript {
     ext.kotlin_version = '1.4.31'
+    ext.sql_delight_version = '1.4.4'
+
     repositories {
         google()
         jcenter()
@@ -17,6 +19,7 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+        classpath "com.squareup.sqldelight:gradle-plugin:$sql_delight_version"
     }
 }
 
@@ -37,6 +40,7 @@ ext {
     ktor_version = "1.5.3"
     kodeinVersion = "7.1.0"
     moko_mvvm_version = "0.10.0"
+
 
     mockk_version = "1.9.3"
 }

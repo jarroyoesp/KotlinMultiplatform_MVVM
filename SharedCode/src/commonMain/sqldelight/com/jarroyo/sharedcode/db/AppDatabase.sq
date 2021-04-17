@@ -1,0 +1,16 @@
+
+CREATE TABLE User (
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL
+);
+
+insertUser:
+INSERT OR FAIL INTO User(name)
+VALUES(?);
+
+removeAllUser:
+DELETE FROM User;
+
+selectAllUser:
+SELECT *
+FROM User;

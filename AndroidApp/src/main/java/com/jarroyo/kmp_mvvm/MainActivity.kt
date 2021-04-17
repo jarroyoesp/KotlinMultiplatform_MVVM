@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jarroyo.kmp_mvvm.ui.main.adapter.GitHubRepoRVAdapter
+import com.jarroyo.kmp_mvvm.ui.main.adapter.UserRVAdapter
 import com.jarroyo.sharedcode.base.Response
+import com.jarroyo.sharedcode.db.User
 import com.jarroyo.sharedcode.domain.model.github.GitHubRepo
 import com.jarroyo.sharedcode.platformName
 import com.jarroyo.sharedcode.viewModel.*
@@ -16,15 +18,16 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     // View Model
-    lateinit var mCounterViewModel: CounterViewModel
     lateinit var mGitHubViewModel: GitHubViewModel
 
     // RV Adapter
     private var mLayoutManager: LinearLayoutManager? = null
+    private var mLayoutManagerUser: LinearLayoutManager? = null
     private var mRvAdapter: GitHubRepoRVAdapter? = null
+    private var mUserRvAdapter: UserRVAdapter? = null
 
-    private lateinit var countObserver : (counterState: GetCounterState) -> Unit
     private lateinit var getGithubListObserver : (state: GetGitHubRepoListState) -> Unit
+    private lateinit var getUserListObserver : (state: GetUserListState) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,29 +35,32 @@ class MainActivity : AppCompatActivity() {
 
         configView()
         initViewModel()
+
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mCounterViewModel.mGetCounterLiveData.removeObserver(countObserver)
         mGitHubViewModel.mGetGitHubRepoListLiveData.removeObserver(getGithubListObserver)
     }
 
     private fun configView() {
-        val platformName = platformName()
-        activity_main_tv.text = platformName
-
-
         activity_main_button.setOnClickListener {
-            mCounterViewModel.getCounter()
             mGitHubViewModel.getGitHubRepoListMokko("jarroyoesp")
+            mGitHubViewModel.getUserList()
+        }
+        activity_main_button_add.setOnClickListener {
+            val name = activity_main_et_user.text.toString()
+            if (!name.isNullOrEmpty()) {
+                mGitHubViewModel.createUser(name)
+            }
         }
     }
 
     private fun initViewModel() {
-        mCounterViewModel = ViewModelProviders.of(this).get(CounterViewModel::class.java)
         mGitHubViewModel = ViewModelProviders.of(this).get(GitHubViewModel::class.java)
         observeViewModel()
+        mGitHubViewModel.getUserList()
     }
 
     private fun configRecyclerView(treatmentList: List<GitHubRepo>) {
@@ -75,30 +81,49 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    private fun configRecyclerViewUser(userList: List<User>) {
+        if (activity_main_rv_users.adapter == null) {
+            mLayoutManagerUser = LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL, false
+            )
+            activity_main_rv_users.layoutManager = mLayoutManagerUser
+
+            mUserRvAdapter = UserRVAdapter(userList)
+
+            activity_main_rv_users.adapter = mUserRvAdapter
+
+        } else {
+            mUserRvAdapter?.setList(userList)
+            mUserRvAdapter?.notifyDataSetChanged()
+        }
+    }
+
     /****************************************************************************
      * OBSERVER
      ***************************************************************************/
     private fun observeViewModel() {
-        countObserver = { getCurrentCounterState(mCounterViewModel.mGetCounterLiveData.value) }
         getGithubListObserver = { getGitHubListState(mGitHubViewModel.mGetGitHubRepoListLiveData.value) }
+        getUserListObserver = { getUserListObserver(mGitHubViewModel.mGetUserListLiveData.value) }
 
-        mCounterViewModel.mGetCounterLiveData.addObserver(countObserver)
         mGitHubViewModel.mGetGitHubRepoListLiveData.addObserver(getGithubListObserver)
+        mGitHubViewModel.mGetUserListLiveData.addObserver(getUserListObserver)
     }
 
-    fun getCurrentCounterState(state: GetCounterState) {
+    fun getUserListObserver(state: GetUserListState) {
         when (state) {
-            is SuccessGetCounterState -> {
+            is SuccessGetUserListState -> {
                 hideLoading()
                 val response =  state.response as Response.Success
-                onSuccess(value = response.data)
+                onSuccessUserList(response.data)
             }
 
-            is LoadingGetCounterState -> {
+            is LoadingGetUserListState -> {
                 showLoading()
             }
 
-            is ErrorGetCounterState -> {
+            is ErrorGetUserListState -> {
                 hideLoading()
                 val response =  state as Response.Error
                 showError(response.message)
@@ -129,9 +154,8 @@ class MainActivity : AppCompatActivity() {
     /**
      * ON SUCCESS
      */
-    private fun onSuccess(value: Int) {
-
-        activity_main_tv.text = "Counter = $value"
+    private fun onSuccessUserList(userList: List<User>) {
+        configRecyclerViewUser(userList)
     }
 
     private fun onSuccessGetGitHubList(list: List<GitHubRepo>) {

@@ -1,6 +1,8 @@
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.android.library'
+apply plugin: 'com.squareup.sqldelight'
+
 
 android {
     compileSdkVersion(28)
@@ -78,6 +80,9 @@ kotlin {
             implementation("io.ktor:ktor-client-json:$ktor_version")
             implementation("io.ktor:ktor-client-logging:$ktor_version")
             implementation("io.ktor:ktor-client-serialization:$ktor_version")
+
+            // SQL Delight
+            implementation "com.squareup.sqldelight:runtime:$sql_delight_version"
         }
 
         androidMain.dependencies {
@@ -89,6 +94,9 @@ kotlin {
 
             // KTOR
             implementation "io.ktor:ktor-client-android:$ktor_version"
+
+            // SQL Delight
+            implementation("com.squareup.sqldelight:android-driver:$sql_delight_version")
         }
 
         iosMain.dependencies {
@@ -96,6 +104,9 @@ kotlin {
 
             // KTOR
             implementation "io.ktor:ktor-client-ios:$ktor_version"
+
+            // SQL Delight
+            implementation("com.squareup.sqldelight:native-driver:$sql_delight_version")
         }
 
         commonTest.dependencies {
@@ -103,6 +114,13 @@ kotlin {
             implementation kotlin('test-annotations-common')
             implementation "io.mockk:mockk:$mockk_version"
         }
+    }
+
+    sqldelight {
+        AppDatabase {
+            packageName = "com.jarroyo.sharedcode.db"
+        }
+        linkSqlite = true
     }
 }
 

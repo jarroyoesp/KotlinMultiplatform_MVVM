@@ -70,9 +70,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 self.onSuccessGetGitHubRepoList(list: value)
                 
             } else if (mCurrentState is LoadingGetGitHubRepoListState) {
-                self.mCounterLabel.text = "Loading"
+                //self.mCounterLabel.text = "Loading"
             } else if (mCurrentState is ErrorGetGitHubRepoListState) {
-                self.mCounterLabel.text = "ERROR"
+                //self.mCounterLabel.text = "ERROR"
             }
             
         }
