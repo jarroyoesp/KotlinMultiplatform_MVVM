@@ -9,17 +9,19 @@ import com.jarroyo.sharedcode.di.KodeinInjector
 import com.jarroyo.sharedcode.domain.model.github.GitHubRepo
 import com.jarroyo.sharedcode.domain.usecase.github.getRepos.GetGitHubRepoListRequest
 import com.jarroyo.sharedcode.domain.usecase.github.getRepos.GetGitHubRepoListUseCase
-import com.jarroyo.sharedcode.utils.coroutines.launchSilent
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import org.kodein.di.instance
-import kotlin.coroutines.CoroutineContext
 
+@ExperimentalCoroutinesApi
 class GitHubViewModel : ViewModel() {
 
     // LIVE DATA
-    var mGetGitHubRepoListLiveData = MutableLiveData<GetGitHubRepoListState>(LoadingGetGitHubRepoListState())
+    var mGetGitHubRepoListLiveData =
+        MutableLiveData<GetGitHubRepoListState>(LoadingGetGitHubRepoListState())
 
     // USE CASE
     private val mGetGitHubRepoListUseCase by KodeinInjector.instance<GetGitHubRepoListUseCase>()
@@ -27,8 +29,9 @@ class GitHubViewModel : ViewModel() {
     /**
      * GET GITHUB REPO LIST
      */
-    fun getGitHubRepoList(username: String) {
-        viewModelScope.launch {
+    fun getGitHubRepoListMokko(username: String) {
+        viewModelScope.launch() {
+
             mGetGitHubRepoListLiveData.postValue(LoadingGetGitHubRepoListState())
 
             val request = GetGitHubRepoListRequest(username)
@@ -40,7 +43,7 @@ class GitHubViewModel : ViewModel() {
     /**
      * PROCCESS RESPONSE
      */
-    fun processGitHubRepoListResponse(response: Response<List<GitHubRepo>>){
+    fun processGitHubRepoListResponse(response: Response<List<GitHubRepo>>) {
         if (response is Response.Success) {
             mGetGitHubRepoListLiveData.postValue(
                 SuccessGetGitHubRepoListState(

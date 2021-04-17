@@ -1,5 +1,5 @@
 # Kotlin-Multiplatform MVVM (Android & iOS)
-![kotlin-version](https://img.shields.io/badge/kotlin-1.3.70-orange)
+![kotlin-version](https://img.shields.io/badge/kotlin-1.4.31-orange)
 <a target="_blank" href="https://androidweekly.net/issues/issue-397"><img src="https://androidweekly.net/issues/issue-397/badge"></a>
 
 Example of application using Kotlin Multiplatform and MVVM pattern for both platforms (Android & iOS). To achieve it the libraries used are:

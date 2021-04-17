@@ -8,10 +8,10 @@ import com.jarroyo.sharedcode.data.source.network.INetworkDataSource
 import com.jarroyo.sharedcode.data.source.network.NetworkDataSource
 import com.jarroyo.sharedcode.domain.usecase.counter.GetCounterUseCase
 import com.jarroyo.sharedcode.domain.usecase.github.getRepos.GetGitHubRepoListUseCase
-import com.jarroyo.sharedcode.httpClientEngine
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import org.kodein.di.*
 import kotlin.coroutines.CoroutineContext
@@ -20,9 +20,11 @@ import kotlin.native.concurrent.ThreadLocal
 @ThreadLocal
 val KodeinInjector = DI {
 
-    bind<CoroutineContext>() with provider { ApplicationDispatcher }
+    //bind<CoroutineContext>() with provider { ApplicationDispatcher }
 
-    val client = HttpClient(httpClientEngine) {
+    bind<CoroutineContext>() with provider { Dispatchers.Main }
+
+    val client = HttpClient() {
         install(JsonFeature) {
             serializer = KotlinxSerializer(json = Json {
                 isLenient = false
@@ -36,12 +38,12 @@ val KodeinInjector = DI {
     /**
      * NETWORK API
      */
-    bind<GitHubApi>() with provider { GitHubApi(client) }
+    bind<GitHubApi>() with provider { GitHubApi() }
 
     /**
      * NETWORK DATA SOURCE
      */
-    bind<INetworkDataSource>() with provider { NetworkDataSource(instance()) }
+    bind<INetworkDataSource>() with provider { NetworkDataSource(instance(), client) }
 
 
     /**
