@@ -34,7 +34,7 @@ class GitHubRepository(
      **********************************************************************************************/
     suspend fun getRepos(request: GetGitHubRepoListRequest): Response<List<GitHubRepo>> {
         val userList = diskDataSource.getUserList()
-        val response = networkDataSource.getGitHubRepoList(userList[0].name)
+        val response = networkDataSource.getGitHubRepoList(request.userName)
         return response
     }
 }

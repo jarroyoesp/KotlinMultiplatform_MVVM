@@ -15,6 +15,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     @IBOutlet weak var mCounterLabel: UILabel!
     @IBOutlet weak var mTableView: UITableView!
     
+    @IBOutlet weak var mDbTableView:UITableView!
+    @IBOutlet weak var mButtonAddDatabase: UIButton!
+    @IBOutlet weak var mEditTextUser: UITextField!
+    
     private var mCounterViewModel: CounterViewModel!
     private var mGitHubViewModel: GitHubViewModel!
     
@@ -32,6 +36,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         mTableView.dataSource = self
         mTableView.delegate = self
+        
+        mDbTableView.dataSource = self
+        mDbTableView.delegate = self
+        
+        mButtonAddDatabase.addTarget(self, action: #selector(didButtonAddDataBaseClick), for: .touchUpInside)
     }
     
     func initViewModel() {
@@ -39,6 +48,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         mGitHubViewModel = GitHubViewModel()
         observeCounterViewModel()
         observeGitHubViewModel()
+        observeUserListViewModel()
     }
     
     /****************************************************************************
@@ -78,6 +88,24 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
+    func observeUserListViewModel() {
+        mGitHubViewModel.mGetUserListLiveData.addObserver { (mCurrentState) in
+            if (mCurrentState is SuccessGetUserListState) {
+                let successState = mCurrentState as! SuccessGetUserListState
+                let response = (successState.response as! ResponseSuccess)
+                let value = response.data as! [User]
+                let lastUser = value.last?.name ?? "unknown"
+                self.mCounterLabel.text =  lastUser + String(value.count)
+                
+            } else if (mCurrentState is LoadingGetUserListState) {
+                self.mCounterLabel.text = "Loading"
+            } else if (mCurrentState is ErrorGetUserListState) {
+                self.mCounterLabel.text = "ERROR"
+            }
+        
+        }
+    }
+    
     func onSuccessGetGitHubRepoList(list: [GitHubRepo]) {
         update(list: list)
     }
@@ -86,8 +114,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
      * ON CLICKS
      ****************************************************************************/
     @objc func didButtonClick(_ sender: UIButton) {
-        mCounterViewModel.getCounter()
         mGitHubViewModel.getGitHubRepoListMokko(username: "jarroyoesp")
+    }
+    
+    @objc func didButtonAddDataBaseClick(_ sender: UIButton) {
+        var userString: String = self.mEditTextUser.text ?? "unknown"
+        mGitHubViewModel.createUser(name: userString)
     }
     
     /*****************************************************************************
