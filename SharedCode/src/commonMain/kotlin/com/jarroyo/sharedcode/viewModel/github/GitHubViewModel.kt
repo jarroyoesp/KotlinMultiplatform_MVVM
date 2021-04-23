@@ -5,10 +5,14 @@
 package com.jarroyo.sharedcode.viewModel.github
 
 import com.jarroyo.sharedcode.base.Response
+import com.jarroyo.sharedcode.db.User
 import com.jarroyo.sharedcode.di.KodeinInjector
 import com.jarroyo.sharedcode.domain.model.github.GitHubRepo
 import com.jarroyo.sharedcode.domain.usecase.github.getRepos.GetGitHubRepoListRequest
 import com.jarroyo.sharedcode.domain.usecase.github.getRepos.GetGitHubRepoListUseCase
+import com.jarroyo.sharedcode.domain.usecase.user.CreateUserRequest
+import com.jarroyo.sharedcode.domain.usecase.user.CreateUserUseCase
+import com.jarroyo.sharedcode.domain.usecase.user.GetUserListUseCase
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,8 +27,13 @@ class GitHubViewModel : ViewModel() {
     var mGetGitHubRepoListLiveData =
         MutableLiveData<GetGitHubRepoListState>(LoadingGetGitHubRepoListState())
 
+    var mGetUserListLiveData =
+        MutableLiveData<GetUserListState>(LoadingGetUserListState())
+
     // USE CASE
     private val mGetGitHubRepoListUseCase by KodeinInjector.instance<GetGitHubRepoListUseCase>()
+    private val mGetUserListUseCase by KodeinInjector.instance<GetUserListUseCase>()
+    private val mCreateUserUseCase by KodeinInjector.instance<CreateUserUseCase>()
 
     /**
      * GET GITHUB REPO LIST
@@ -56,6 +65,42 @@ class GitHubViewModel : ViewModel() {
                     response
                 )
             )
+        }
+    }
+
+    fun getUserList() {
+        viewModelScope.launch() {
+
+            mGetUserListLiveData.postValue(LoadingGetUserListState())
+
+            val response = mGetUserListUseCase.execute()
+            processUserList(response)
+        }
+    }
+
+    fun processUserList(response: Response<List<User>>) {
+        if (response is Response.Success) {
+            mGetUserListLiveData.postValue(
+                SuccessGetUserListState(
+                    response
+                )
+            )
+        } else if (response is Response.Error) {
+            mGetUserListLiveData.postValue(
+                ErrorGetUserListState(
+                    response
+                )
+            )
+        }
+    }
+
+    fun createUser(name: String) {
+        viewModelScope.launch() {
+
+            mGetUserListLiveData.postValue(LoadingGetUserListState())
+
+            val response = mCreateUserUseCase.execute(CreateUserRequest(name))
+            processUserList(response)
         }
     }
 

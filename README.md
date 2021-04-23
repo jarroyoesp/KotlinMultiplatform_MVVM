@@ -9,7 +9,12 @@ Example of application using Kotlin Multiplatform and MVVM pattern for both plat
 - [Serialization](https://github.com/Kotlin/kotlinx.serialization): to De/Serializing JSON 
 - [Kodein-DI](https://github.com/Kodein-Framework/Kodein-DI): Dependency injector
 - [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines): Library support for Kotlin coroutines with multiplatform support
+- [SQLDelight](https://github.com/cashapp/sqldelight): SQLDelight generates typesafe kotlin APIs from your SQL statements.
 
-More detail on this post on ProAndroidDev: [here](https://proandroiddev.com/kotlin-multiplatform-mvvm-clean-architecture-f20b99f90b95)
+More detail in this post on ProAndroidDev: [here](https://proandroiddev.com/kotlin-multiplatform-mvvm-clean-architecture-f20b99f90b95)
+
+### Unit Testing SharedCode
+
+- Added unitTest for GitHubRepository
 
 <img src="https://github.com/jarroyoesp/KotlinMultiplatform_MVVM/blob/master/images/KMP_MVVM_Schema.png">
